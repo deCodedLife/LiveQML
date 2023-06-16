@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/ErrorPage.qml</file>
+    </qresource>
+</RCC>
