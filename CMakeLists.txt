@@ -7,6 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Network HttpServer Positioning Location)
+find_package(OpenSSL)
 
 qt_standard_project_setup()
 
@@ -31,6 +32,21 @@ set_target_properties(appLiveQML PROPERTIES
 add_subdirectory( QLIVE )
 include_directories( appLiveQML QLive/src )
 
+set( PROJECT_NAME appLiveQML )
+add_subdirectory( android_openssl )
+
+#if (ANDROID)
+#    list(APPEND ANDROID_EXTRA_LIBS
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/arm64-v8a/libcrypto_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/arm64-v8a/libssl_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/armeabi-v7a/libcrypto_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/armeabi-v7a/libssl_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/x86/libcrypto_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/x86/libssl_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/x86_64/libcrypto_3.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/android/ssl_3/x86_64/libssl_3.so
+#    )
+#endif()
 
 target_link_libraries(appLiveQML
     PRIVATE Qt6::Quick
@@ -47,17 +63,6 @@ install(TARGETS appLiveQML
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-set (SSL_ROOT_PATH ${CMAKE_CURRENT_LIST_DIR}/android/ssl)
-
-if (Qt6_VERSION VERSION_GREATER_EQUAL 6.5.0)
-    list(APPEND ANDROID_EXTRA_LIBS
-        ${SSL_ROOT_PATH}/${CMAKE_ANDROID_ARCH_ABI}/libcrypto_3.so
-        ${SSL_ROOT_PATH}/${CMAKE_ANDROID_ARCH_ABI}/libssl_3.so)
-endif()
-
-set_target_properties(appLiveQML PROPERTIES
-    QT_ANDROID_EXTRA_LIBS "${ANDROID_EXTRA_LIBS}")
 
 set(CPACK_GENERATOR "DragNDrop")
 include(CPack)

@@ -10,11 +10,12 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
 #ifdef Q_OS_MAC
-    HttpServer server( "server" );
-    QLive client( &engine );
+//    HttpServer server( "server" );
+    QLive client( &engine, QLIVE_EXTERN );
+    client.SetServer( "https://codedlife.ru/" );
 #else
     QLive client( &engine, QLIVE_EXTERN );
-    client.SetServer( "http://192.168.1.105" );
+    client.SetServer( "https://codedlife.ru" );
 #endif
 
     client.SetErrorPage( "qrc:/qml/ErrorPage.qml" );
