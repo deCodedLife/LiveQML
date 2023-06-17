@@ -33,7 +33,7 @@ add_subdirectory( QLIVE )
 include_directories( appLiveQML QLive/src )
 
 set( PROJECT_NAME appLiveQML )
-add_subdirectory( android_openssl )
+add_subdirectory( open_ssl )
 
 #if (ANDROID)
 #    list(APPEND ANDROID_EXTRA_LIBS
