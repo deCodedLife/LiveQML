@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 #else
 
 #ifdef Q_OS_MAC
-    QLive client( &engine, QLIVE_LOCAL );
+    QLive client( &engine, QLIVE_EXTERN );
     client.SetServer( "https://codedlife.ru" );
 #else
     QLive client( &engine, QLIVE_EXTERN );
