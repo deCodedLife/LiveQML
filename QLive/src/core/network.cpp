@@ -15,7 +15,7 @@ Network::Network(QObject *parent)
     m_manager->setStrictTransportSecurityEnabled(false);
 }
 
-void Network::GET(QString url)
+void Network::get(QString url)
 {
     QNetworkRequest request;
     request.setSslConfiguration(m_conf);
@@ -23,7 +23,7 @@ void Network::GET(QString url)
     m_manager->get( request );
 }
 
-void Network::POST(QString url, QVariant data)
+void Network::post(QString url, QVariant data)
 {
     QNetworkRequest request;
     request.setUrl( QUrl( url ) );

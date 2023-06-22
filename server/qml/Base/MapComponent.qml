@@ -2,11 +2,7 @@ import QtQuick
 import QtLocation
 import QtPositioning
 
-import "../"
-
 Item {
-    anchors.fill: parent
-
     Plugin {
         id: mapPlugin
         preferred: [ "here", "asm" ]
@@ -25,6 +21,7 @@ Item {
         plugin: mapPlugin
         zoomLevel: 16
         property geoCoordinate startCenroid
+        center: QtPositioning.coordinate(44.97739, 34.10428)
         activeMapType: map.supportedMapTypes[7]
 
         PinchHandler {
@@ -73,7 +70,7 @@ Item {
 
     Component.onCompleted: {
         Settings.headerTitle = "Hot reload updated!"
-//        Settings.hideHeader()
-        Settings.showHeader()
+        Settings.hideHeader()
+//        Settings.showHeader()
     }
 }

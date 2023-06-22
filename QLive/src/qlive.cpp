@@ -8,8 +8,10 @@ QLive::QLive( QQmlApplicationEngine *engine, WorkingTypes type, QObject *parent 
     connect( &m_net, &Network::errorOccured, this, &QLive::unavailable );
     connect( &m_timer, &Timer::triggered, this, [&]() {
         if ( m_serverAddress.isEmpty() ) return;
-        m_net.GET( m_serverAddress );
+        m_net.get( m_serverAddress );
     } );
+
+    m_qmlLocation = "qml";
 
     m_thread = new QThread();
     m_timer.setInterval( 1000 );
@@ -20,14 +22,16 @@ QLive::QLive( QQmlApplicationEngine *engine, WorkingTypes type, QObject *parent 
     if ( type == QLIVE_LOCAL )
     {
         m_serverAddress = "http://localhost";
-        m_net.GET( m_serverAddress );
+        m_net.get( m_serverAddress );
     }
+
+    qmlRegisterType<Network>( "Network", 1, 1, "Network" );
 }
 
 void QLive::SetServer( QString url )
 {
     m_serverAddress = url;
-    m_net.GET( m_serverAddress );
+    m_net.get( m_serverAddress );
 }
 
 void QLive::SetErrorPage( QString url )
@@ -38,6 +42,11 @@ void QLive::SetErrorPage( QString url )
 void QLive::SetLocalServerDir(QString dir)
 {
     m_localServerDir = dir;
+}
+
+void QLive::SetQMLLocation( QString url )
+{
+    m_qmlLocation = url;
 }
 
 void QLive::handleRequest( QString data )
@@ -68,7 +77,7 @@ void QLive::handleRequest( QString data )
         shouldReload = true;
     }
 
-    m_currentPage = m_serverAddress + "/Main.qml";
+    m_currentPage = m_serverAddress + "/" + m_qmlLocation + "/Main.qml";
     if ( shouldReload ) reloadQML();
 
 }
@@ -82,6 +91,10 @@ void QLive::reloadQML()
     }
     m_engine->clearComponentCache();
     m_engine->load( m_currentPage );
+
+    QQmlContext *ctx = m_engine->rootContext();
+    ctx->setContextProperty( "SERVER", m_serverAddress );
+    ctx->setContextProperty( "QML", m_qmlLocation );
 }
 
 void QLive::unavailable()

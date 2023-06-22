@@ -5,6 +5,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QQmlContext>
 #include <QQmlApplicationEngine>
 
 #include "core/timer.h"
@@ -26,6 +27,7 @@ public:
     void SetServer( QString url );
     void SetErrorPage( QString url );
     void SetLocalServerDir( QString dir );
+    void SetQMLLocation( QString );
 
 private slots:
     void handleRequest( QString data );
@@ -45,6 +47,7 @@ private:
     QString m_currentPage;
     QString m_serverAddress;
     QString m_localServerDir;
+    QString m_qmlLocation;
 
 private:
     QMap<QString, QString> m_files;

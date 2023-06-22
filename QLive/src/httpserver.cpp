@@ -4,52 +4,49 @@ HttpServer::HttpServer( QString workingDirectory, QObject *parent )
     : TObject{parent},
     m_workingDirectory( workingDirectory )
 {
+    m_qmlSources = "qml";
+
     m_server.route( "/", [&] ( const QHttpServerRequest &req  ) {
         return HandleConnection();
     } );
 
     m_server.route( "/.*", [&]( const QHttpServerRequest &req ) {
-        QString url = req.url().toString();
-        QString filePath = m_workingDirectory + '/' + url.split( ":0/" )[ 1 ];
-
-        if ( !QFile().exists( filePath ) ) {
-            QString error = "[ LOCAL SERVER ] File not found: " + filePath;
-            emit logData( MESSAGE_ERROR, error );
-            return QHttpServerResponse(
-                QHttpServerResponder::StatusCode::Forbidden
-            );
-        }
-
-        QFile file( filePath );
-
-        if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) )
-        {
-            QString error = "[ LOCAL SERVER ] Can't open file: " + filePath;
-            logData( MESSAGE_ERROR, error );
-            return QHttpServerResponse( error );
-        }
-
-        QString data = file.readAll();
-        file.close();
-
-        return QHttpServerResponse( data );
-    }  );
+        return HttpServer::FileServer( req, "" );
+    } );
 
     m_server.listen( QHostAddress( HOST ), PORT );
+}
+
+void HttpServer::QMLPath(QString qmlDir)
+{
+    m_qmlSources = qmlDir;
+}
+
+QHttpServerResponse HttpServer::FileServer( const QHttpServerRequest &req, const QString workingDir ) {
+    QString url = req.url().toString();
+    QString filePath = url.split( ":0/" )[ 1 ];
+
+    if ( !QFile().exists( filePath ) ) {
+        QString error = "[ LOCAL SERVER ] File not found: " + filePath;
+        emit logData( MESSAGE_ERROR, error );
+        return QHttpServerResponse( QHttpServerResponder::StatusCode::Forbidden );
+    }
+
+    return QHttpServerResponse::fromFile( filePath );
 }
 
 QJsonObject HttpServer::HandleConnection()
 {
     QJsonArray files;
 
-    if ( !QDir().exists( m_workingDirectory ) )
+    if ( !QDir().exists( m_qmlSources ) )
     {
         QString error = "[ LOCAL SERVER ] Working dirrectory doesn't exists";
         logData( MESSAGE_ERROR, error );
         return SendData( error, 500 );
     }
 
-    QDirIterator it( m_workingDirectory, QDir::Files, QDirIterator::Subdirectories );
+    QDirIterator it( m_qmlSources, QDir::Files, QDirIterator::Subdirectories );
 
     while ( it.hasNext() )
     {

@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Network HttpServer Positioning Location)
-find_package(OpenSSL)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Network HttpServer Positioning Location SVG)
+#find_package(OpenSSL)
 
 qt_standard_project_setup()
 

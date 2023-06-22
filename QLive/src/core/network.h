@@ -16,8 +16,8 @@ class Network : public TObject
 public:
     explicit Network(QObject *parent = nullptr);
 
-    void GET(QString url);
-    void POST(QString url, QVariant data);
+    Q_INVOKABLE void get(QString url);
+    Q_INVOKABLE void post(QString url, QVariant data);
 
 
 signals:
