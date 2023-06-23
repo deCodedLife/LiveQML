@@ -5,12 +5,15 @@ import QtQuick.Controls.Material
 import ".."
 import "../Base"
 
-Item {
-    anchors.fill: parent
+Page {
     property var storyData: Settings.pageContent
+    height: body.implicitHeight
+    id: page
 
     ColumnLayout {
+        id: body
         anchors.fill: parent
+        anchors.topMargin: Settings.defaultmargin
         anchors.leftMargin: Settings.defaultmargin
         anchors.rightMargin: Settings.defaultmargin
         spacing: Settings.defaultmargin
@@ -46,7 +49,8 @@ Item {
 
     Component.onCompleted:
     {
-        Settings.headerTitle = ""
-        Settings.showHeader()
+        Settings.headerColor = "transparent"
+        Settings.headerTitle = storyData[ "timestamp" ].split(" ")[ 0 ]
+        Settings.headerSubtitle = storyData[ "timestamp" ].split(" ")[ 1 ]
     }
 }

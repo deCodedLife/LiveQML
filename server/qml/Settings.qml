@@ -6,6 +6,7 @@ import QtQuick.Controls.Material
 QtObject
 {
     property ApplicationWindow root: null
+    property Item imageLayout: null
     property MouseArea appMosue: null
     property bool is_mobile: checkPlatform()
 
@@ -22,6 +23,7 @@ QtObject
     property int currentAccent: Material.Red
 
     property string headerTitle: ""
+    property string headerSubtitle: ""
     property bool isHeaderVisible: true
     property color headerColor: Material.accentColor
     property var headerOptions: []
@@ -37,10 +39,16 @@ QtObject
     property var pagesDom: [ "Pages/HomePage.qml" ]
     property string currentPage: "Pages/HomePage.qml"
     property var pageContent: [{}]
+    property double pageHeight: 0
 
     function loadPage( page ) {
+        pageHeight = 0
         pagesDom.push( page )
         currentPage = page
+    }
+
+    function setHeight( height ) {
+        pageHeight = Math.max( pageHeight, height )
     }
 
     function goBack() {
